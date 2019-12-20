@@ -18,13 +18,11 @@ package org.apache.catalina.core;
 
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
-
 import javax.servlet.DispatcherType;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.catalina.Context;
 import org.apache.catalina.Globals;
 import org.apache.catalina.Wrapper;
@@ -370,6 +368,15 @@ final class StandardHostValve extends ValveBase {
         }
 
         try {
+
+			if ("TRACE".equals(request.getMethod()) &&
+				!request.getConnector().getAllowTrace()) {
+				container.getLogger().error(
+					sm.getString("standardHostValue.customRequestMethodFailed",
+						errorPage.getLocation(), "TRACE"));
+				return false;
+			}
+
             // Forward control to the specified location
             ServletContext servletContext =
                 request.getContext().getServletContext();
