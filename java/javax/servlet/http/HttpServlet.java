@@ -25,7 +25,6 @@ import java.lang.reflect.Method;
 import java.text.MessageFormat;
 import java.util.Enumeration;
 import java.util.ResourceBundle;
-
 import javax.servlet.DispatcherType;
 import javax.servlet.GenericServlet;
 import javax.servlet.ServletException;
@@ -558,7 +557,7 @@ public abstract class HttpServlet extends GenericServlet {
         throws ServletException, IOException
     {
 
-    if (isAllowTrace(req)) {
+        if (isAllowTrace(req)) {
             int responseLength;
 
             String CRLF = "\r\n";
@@ -580,11 +579,7 @@ public abstract class HttpServlet extends GenericServlet {
             out.print(buffer.toString());
             out.close();
         } else {
-            //
-            // Note that this means a TRACE request was attempted
-            // on a connector that disallows it.
-            //
-
+            // A TRACE request on a connector that disallows it.
             doSendHttpMethodErrorResponse(req, resp,
                 "http.method_not_implemented",
                 HttpServletResponse.SC_METHOD_NOT_ALLOWED);
