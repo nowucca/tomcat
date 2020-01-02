@@ -369,13 +369,13 @@ final class StandardHostValve extends ValveBase {
 
         try {
 
-			if ("TRACE".equals(request.getMethod()) &&
-				!request.getConnector().getAllowTrace()) {
-				container.getLogger().error(
-					sm.getString("standardHostValue.customRequestMethodFailed",
-						errorPage.getLocation(), "TRACE"));
-				return false;
-			}
+            if ("TRACE".equals(request.getMethod()) &&
+                !request.getConnector().getAllowTrace()) {
+                container.getLogger().error(
+                    sm.getString("standardHostValue.customRequestMethodFailed",
+                        errorPage.getLocation(), "TRACE"));
+                return false;
+            }
 
             // Forward control to the specified location
             ServletContext servletContext =

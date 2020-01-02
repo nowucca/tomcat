@@ -487,10 +487,10 @@ public abstract class HttpServlet extends GenericServlet {
         boolean ALLOW_POST = false;
         boolean ALLOW_PUT = false;
         boolean ALLOW_DELETE = false;
-		boolean ALLOW_TRACE = isAllowTrace(req);
-		boolean ALLOW_OPTIONS = true;
+        boolean ALLOW_TRACE = isAllowTrace(req);
+        boolean ALLOW_OPTIONS = true;
 
-		for (int i=0; i<methods.length; i++) {
+        for (int i=0; i<methods.length; i++) {
             Method m = methods[i];
 
             if (m.getName().equals("doGet")) {
@@ -531,7 +531,7 @@ public abstract class HttpServlet extends GenericServlet {
     }
 
 
-	/**
+    /**
      * Called by the server (via the <code>service</code> method)
      * to allow a servlet to handle a TRACE request.
      *
@@ -558,61 +558,61 @@ public abstract class HttpServlet extends GenericServlet {
         throws ServletException, IOException
     {
 
-	if (isAllowTrace(req)) {
-			int responseLength;
+    if (isAllowTrace(req)) {
+            int responseLength;
 
-			String CRLF = "\r\n";
-			StringBuilder buffer = new StringBuilder("TRACE ").append(req.getRequestURI()).append(" ").append(req.getProtocol());
+            String CRLF = "\r\n";
+            StringBuilder buffer = new StringBuilder("TRACE ").append(req.getRequestURI()).append(" ").append(req.getProtocol());
 
-			Enumeration<String> reqHeaderEnum = req.getHeaderNames();
+            Enumeration<String> reqHeaderEnum = req.getHeaderNames();
 
-			while (reqHeaderEnum.hasMoreElements()) {
-				String headerName = reqHeaderEnum.nextElement();
-				buffer.append(CRLF).append(headerName).append(": ").append(req.getHeader(headerName));
-			}
-			buffer.append(CRLF);
+            while (reqHeaderEnum.hasMoreElements()) {
+                String headerName = reqHeaderEnum.nextElement();
+                buffer.append(CRLF).append(headerName).append(": ").append(req.getHeader(headerName));
+            }
+            buffer.append(CRLF);
 
-			responseLength = buffer.length();
+            responseLength = buffer.length();
 
-			resp.setContentType("message/http");
-			resp.setContentLength(responseLength);
-			ServletOutputStream out = resp.getOutputStream();
-			out.print(buffer.toString());
-			out.close();
-		} else {
-			//
-			// Note that this means a TRACE request was attempted
-			// on a connector that disallows it.
-			//
+            resp.setContentType("message/http");
+            resp.setContentLength(responseLength);
+            ServletOutputStream out = resp.getOutputStream();
+            out.print(buffer.toString());
+            out.close();
+        } else {
+            //
+            // Note that this means a TRACE request was attempted
+            // on a connector that disallows it.
+            //
 
-			doSendHttpMethodErrorResponse(req, resp,
-				"http.method_not_implemented",
-				HttpServletResponse.SC_METHOD_NOT_ALLOWED);
-		}
+            doSendHttpMethodErrorResponse(req, resp,
+                "http.method_not_implemented",
+                HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+        }
     }
 
 
-	private boolean isAllowTrace(HttpServletRequest req) {
-		boolean result = true;
-		// Tomcat specific hack to see if TRACE is allowed
-		Class<?> clazz;
-		try {
-			clazz = Class.forName("org.apache.catalina.connector.RequestFacade");
-			Method getAllowTrace = clazz.getMethod("getAllowTrace", (Class<?>[]) null);
-			if (req instanceof HttpServletRequestWrapper) {
-				ServletRequest servletRequest = ((HttpServletRequestWrapper)req).getRequest();
-				if (servletRequest instanceof HttpServletRequest) {
-					req = (HttpServletRequest)servletRequest;
-				}
-			}
-			result = ((Boolean) getAllowTrace.invoke(req, (Object[]) null)).booleanValue();
-		} catch (ClassNotFoundException | NoSuchMethodException | SecurityException |
-			IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-			// Ignore. Not running on Tomcat. TRACE is always allowed.
-		}
-		// End of Tomcat specific hack
-		return result;
-	}
+    private boolean isAllowTrace(HttpServletRequest req) {
+        boolean result = true;
+        // Tomcat specific hack to see if TRACE is allowed
+        Class<?> clazz;
+        try {
+            clazz = Class.forName("org.apache.catalina.connector.RequestFacade");
+            Method getAllowTrace = clazz.getMethod("getAllowTrace", (Class<?>[]) null);
+            if (req instanceof HttpServletRequestWrapper) {
+                ServletRequest servletRequest = ((HttpServletRequestWrapper)req).getRequest();
+                if (servletRequest instanceof HttpServletRequest) {
+                    req = (HttpServletRequest)servletRequest;
+                }
+            }
+            result = ((Boolean) getAllowTrace.invoke(req, (Object[]) null)).booleanValue();
+        } catch (ClassNotFoundException | NoSuchMethodException | SecurityException |
+            IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+            // Ignore. Not running on Tomcat. TRACE is always allowed.
+        }
+        // End of Tomcat specific hack
+        return result;
+    }
 
     /**
      * Receives standard HTTP requests from the public
@@ -695,27 +695,27 @@ public abstract class HttpServlet extends GenericServlet {
             // method was requested, anywhere on this server.
             //
 
-			doSendHttpMethodErrorResponse(req, resp,
-				"http.method_not_implemented",
-				HttpServletResponse.SC_NOT_IMPLEMENTED);
-		}
+            doSendHttpMethodErrorResponse(req, resp,
+                "http.method_not_implemented",
+                HttpServletResponse.SC_NOT_IMPLEMENTED);
+        }
     }
 
-	private void doSendHttpMethodErrorResponse(HttpServletRequest req,
-											   HttpServletResponse resp,
-											   String errorMsgKey,
-											   int statusCode) throws IOException {
-		String method = req.getMethod();
-		String errMsg = lStrings.getString(errorMsgKey);
-		Object[] errArgs = new Object[1];
-		errArgs[0] = method;
-		errMsg = MessageFormat.format(errMsg, errArgs);
+    private void doSendHttpMethodErrorResponse(HttpServletRequest req,
+                                               HttpServletResponse resp,
+                                               String errorMsgKey,
+                                               int statusCode) throws IOException {
+        String method = req.getMethod();
+        String errMsg = lStrings.getString(errorMsgKey);
+        Object[] errArgs = new Object[1];
+        errArgs[0] = method;
+        errMsg = MessageFormat.format(errMsg, errArgs);
 
-		resp.sendError(statusCode, errMsg);
-	}
+        resp.sendError(statusCode, errMsg);
+    }
 
 
-	/*
+    /*
      * Sets the Last-Modified entity header field, if it has not
      * already been set and if the value is meaningful.  Called before
      * doGet, to ensure that headers are set before response data is
